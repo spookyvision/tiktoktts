@@ -11,8 +11,10 @@ CONF_ENDPOINT = "api_endpoint"
 CONF_VOICE = "voice"
 
 DEFAULT_ENDPOINT = "https://tiktok-tts.weilnet.workers.dev"
-DEFAULT_VOICE = "de_001"
-DEFAULT_LANG = "de"
+DEFAULT_VOICE = "en_us_001"
+DEFAULT_LANG = "en_us"
+
+UNIQUE_ID = "tiktoktts_device_id"
 
 # available voices taken over from
 # https://raw.githubusercontent.com/oscie57/tiktok-voice/main/main.py

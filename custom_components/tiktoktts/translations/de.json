@@ -1,0 +1,14 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Bearbeite den API Endpoint - nur falls er sich geändert hat - und die standard Sprache/Stimme, die TikTok TTS nutzen soll.",
+                "data": {
+                    "api_endpoint": "API Endpoint",
+                    "language": "Standard Sprache",
+                    "voice": "Standard Stimme"
+                }
+            }
+        }
+    }
+}

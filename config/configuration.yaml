@@ -7,5 +7,7 @@ logger:
   logs:
     custom_components.tiktoktts: debug
 
-tts:
-  - platform: tiktoktts
+#tts:
+#  - platform: tiktoktts
+#    language: de
+#    voice: de_002

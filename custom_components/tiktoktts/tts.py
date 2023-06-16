@@ -15,6 +15,8 @@ from homeassistant.components.tts import CONF_LANG, PLATFORM_SCHEMA, Provider
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
+from homeassistant.const import Platform
+
 from .const import (
     CONF_ENDPOINT,
     CONF_VOICE,
@@ -24,8 +26,10 @@ from .const import (
     SUPPORTED_LANGUAGES,
     SUPPORTED_OPTIONS,
     SUPPORTED_VOICES,
+    DOMAIN,
 )
 
+PLATFORMS = Platform.TTS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,21 +43,51 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def get_engine(hass, config, discovery_info=None):
+async def async_get_engine(hass, config, discovery_info=None):
     """Set up TikTokTTS speech component."""
-    return TikTokTTSProvider(hass, config)
+    _LOGGER.warning("TikTokTTS async_get_engine called: " + str(config))
+    return TikTokTTSProvider(
+        hass, config.get(CONF_ENDPOINT), config.get(CONF_LANG), config.get(CONF_VOICE)
+    )
+
+
+async def async_setup_entry(hass, entry):
+    """Set up TTS from a config entry."""
+    _LOGGER.warning("TikTokTTS async_setup_entry called: " + str(entry))
+    if entry is None:
+        return True
+
+    tiktoktts = TikTokTTSProvider(
+        hass, entry.data[CONF_ENDPOINT], entry.data[CONF_LANG], entry.data[CONF_VOICE]
+    )
+    hass.data[DOMAIN][entry.data[CONF_ENDPOINT]] = tiktoktts
+    return True
+
+
+async def async_unload_entry(hass, entry):
+    """Unload a config entry."""
+    hass.data[DOMAIN].pop(entry.data[CONF_ENDPOINT])
+    return True
+
+
+async def async_setup(hass, config):
+    """Activate Alexa component."""
+    _LOGGER.warning("TikTokTTS async_setup called: " + str(config))
+
+    config = config.get(DOMAIN, {})
+    return True
 
 
 class TikTokTTSProvider(Provider):
     """TikTokTTS speech api provider."""
 
-    def __init__(self, hass, conf):
+    def __init__(self, hass, endpoint, lang, voice):
         """Init TikTokTTS TTS service."""
         self.hass = hass
         self.name = "TikTokTTS"
-        self._endpoint = conf.get(CONF_ENDPOINT)
-        self._voice = conf.get(CONF_VOICE)
-        self._language = conf.get(CONF_LANG)
+        self._endpoint = endpoint
+        self._voice = voice
+        self._language = lang
 
     @property
     def supported_languages(self):
